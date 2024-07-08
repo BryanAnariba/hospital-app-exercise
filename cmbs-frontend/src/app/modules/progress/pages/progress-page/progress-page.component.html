@@ -1,1 +1,85 @@
-<p>progress-page works!</p>
+<div class="row">
+  <div class="col-6">
+    <div class="card">
+      <div class="card-body">
+        <h4 class="card-title">
+          Striped Progress bar: <b>{{progressOne}}</b>
+          <a class="get-code" data-toggle="collapse" href="#pgr3" aria-expanded="true">
+            <i class="fa fa-code" title="" data-toggle="tooltip" data-original-title="Get Code"></i>
+          </a>
+        </h4>
+        <div class="collapse m-t-15" id="pgr3">
+          <pre
+            class="line-numbers language-javascript"><code>&lt;div class="progress"&gt;<br>&lt;div class="progress-bar bg-primary progress-bar-striped" role="progressbar" aria-valuenow="85" aria-valuemin="0" aria-valuemax="100" style="width:85%;height:10px;"&gt; &lt;span class="sr-only"&gt;85% Complete&lt;/span&gt;&lt;/div&gt;<br>&lt;/div&gt;</code></pre>
+        </div>
+        <div class="progress m-t-20">
+          <div 
+            class="progress-bar bg-primary progress-bar-striped active" 
+            aria-valuenow="15" 
+            aria-valuemin="0"
+            aria-valuemax="100" 
+            style="height:5px;" 
+            role="progressbar"
+            [style.width]="currentProgressOne"
+          > 
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-6">
+    <div class="card">
+      <div class="card-body">
+        <h4 class="card-title">
+          Striped Progress bar: <b>{{progressTwo}}</b>
+          <a class="get-code" data-toggle="collapse" href="#pgr3" aria-expanded="true">
+            <i class="fa fa-code" title="" data-toggle="tooltip" data-original-title="Get Code"></i>
+          </a>
+        </h4>
+        <div class="collapse m-t-15" id="pgr3">
+          <pre
+            class="line-numbers language-javascript"><code>&lt;div class="progress"&gt;<br>&lt;div class="progress-bar bg-info progress-bar-striped" role="progressbar" aria-valuenow="85" aria-valuemin="0" aria-valuemax="100" style="width:85%;height:10px;"&gt; &lt;span class="sr-only"&gt;85% Complete&lt;/span&gt;&lt;/div&gt;<br>&lt;/div&gt;</code></pre>
+        </div>
+        <div class="progress m-t-20">
+          <div 
+            class="progress-bar bg-info progress-bar-striped active" 
+            aria-valuenow="15" 
+            aria-valuemin="0"
+            aria-valuemax="100" 
+            style="height:5px;" 
+            role="progressbar"
+            [style.width]="currentProgressTwo"
+          > 
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-6">
+    <div class="card">
+      <div class="card-body">
+       <app-progress 
+          [progressInitialValue]="progressOne"
+          [btnClassName]="'btn btn-primary'"
+          (onReceiveProgressIncrementOrDecrementValue)="onIncrementOrDecrementPercentage($event)"
+        >
+        </app-progress>
+      </div>
+    </div>
+  </div>
+  <div class="col-6">
+    <div class="card">
+      <div class="card-body">
+       <app-progress 
+          [progressInitialValue]="progressTwo"
+          [btnClassName]="'btn btn-info'"
+          (onReceiveProgressIncrementOrDecrementValue)="onIncrementOrDecrementPercentageTwo($event)"
+        >
+        </app-progress>
+      </div>
+    </div>
+  </div>
+</div>
