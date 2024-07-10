@@ -13,9 +13,10 @@ const routes: Routes = [
       { path: 'graphics', loadChildren: () => import('./graphics/graphics.module').then(m => m.GraphicsModule) },
       { path: 'progress', loadChildren: () => import('./progress/progress.module').then(m => m.ProgressModule) },
       { path: 'profile', loadChildren: () => import('./user-account/user-account.module').then(m => m.UserAccountModule) },
+      { path: 'promises', loadChildren: () => import('./promises/promises.module').then(m => m.PromisesModule) },
       { path: '**', redirectTo: 'profile' },
     ],
-  }
+  },
 ];
 
 @NgModule({
