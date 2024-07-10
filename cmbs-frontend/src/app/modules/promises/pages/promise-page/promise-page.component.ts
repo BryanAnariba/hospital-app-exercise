@@ -8,8 +8,30 @@ import { Component, OnInit } from '@angular/core';
 export class PromisePageComponent implements OnInit {
 
   ngOnInit(): void {
-    
-    //const newPromise = new Promise();
+    const newPromise = new Promise((resolve, reject) => {
+      const isOk: boolean = true;
+      if (isOk) {
+        resolve('Hello World');
+      } else {
+        reject('Sometime went wrong');
+      }
+    });
+
+    newPromise
+      .then(result => console.log(result))
+      .catch(error => console.error(error));
+
+    this.getUsers()
+      .then(users => console.log(users));
+
+    console.log('End ngOnInit')
   }
 
+  public getUsers () {
+    return new Promise((resolve) => {
+      fetch('https://reqres.in/api/users?page=2')
+        .then(res => res.json())
+        .then(res => resolve(res.data));
+    });
+  }
 }

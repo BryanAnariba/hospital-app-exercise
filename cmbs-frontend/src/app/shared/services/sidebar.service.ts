@@ -16,6 +16,8 @@ export class SidebarService {
         { title: 'Users', url: '/dashboard/users' },
         { title: 'Doctors', url: '/dashboard/doctors' },
         { title: 'Hospitals', url: '/dashboard/hospitals' },
+        { title: 'Promises', url: '/dashboard/promises/example' },
+        { title: 'RXJS', url: '/dashboard/promises/rxjs' },
       ],
     },
   ];
