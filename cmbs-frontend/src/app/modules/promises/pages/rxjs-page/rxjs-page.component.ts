@@ -1,16 +1,70 @@
-import { Component } from '@angular/core';
-import { Observable, retry } from 'rxjs';
+import { Component, OnDestroy } from '@angular/core';
+import { filter, interval, map, Observable, Subscription, take } from 'rxjs';
 
 @Component({
   selector: 'app-rxjs-page',
   templateUrl: './rxjs-page.component.html',
   styleUrl: './rxjs-page.component.css'
 })
-export class RxjsPageComponent {
+export class RxjsPageComponent implements OnDestroy {
+
+  public intervalSubscription?: Subscription;
 
   constructor () {
+
+    /*this.returnObs()
+      .pipe(
+        retry()
+      )
+      .subscribe({
+      next: (value) => {
+        console.log({value});
+      },
+      error: (error) => {
+        console.error(error);
+      },
+      complete: () => {
+        console.log('SUBSCRIBE COMPLETE!!!!!!!!!!');
+      }
+    });*/
+
+    this.intervalSubscription = this.returnIntervalObservable()
+      .subscribe({
+        next: (value) => {
+          console.log(value);
+        },
+        error: (error) => {
+          console.error(error);
+        },
+        complete: () => {
+          console.log('returnIntervalObservable executed!!!');
+        },
+      });
+  }
+
+  ngOnDestroy(): void {
+    this.intervalSubscription?.unsubscribe();
+  }
+
+  public returnIntervalObservable () {
+    const interval$ = interval(1000);
+    return interval$
+    .pipe(
+      take( // Cuantas veses quieres que se ejecute el observable
+        10,
+      ),
+      map( // Modifica la informacion que retorna el observable
+        value => value * value,
+      ),
+      filter( // Filtrador, cuando el value sea par que lo pase.
+        value => value % 2 === 0,
+      )
+    );    
+  }
+
+  public returnObs (): Observable<number> {
     let i = -1;
-    const obs$ = new Observable(observer => {
+    return new Observable<number>(observer => {
       const interval = setInterval(() => {
         i++;
         observer.next(i);
@@ -25,22 +79,6 @@ export class RxjsPageComponent {
           observer.error('Debe mirar los ticks o notificaciones tiene muchos en la bandeja');
         }
       }, 1000);
-    });
-
-    obs$
-      .pipe(
-        retry()
-      )
-      .subscribe({
-      next: (value) => {
-        console.log({value});
-      },
-      error: (error) => {
-        console.error(error);
-      },
-      complete: () => {
-        console.log('SUBSCRIBE COMPLETE!!!!!!!!!!');
-      }
     });
   }
 }

@@ -7,20 +7,57 @@ const routes: Routes = [
     path: '',
     component: PagesComponent,
     children: [
-      { path: 'users', loadChildren: () => import('./users/users.module').then(m => m.UsersModule) },
-      { path: 'doctors', loadChildren: () => import('./doctors/doctors.module').then(m => m.DoctorsModule) },
-      { path: 'hospitals', loadChildren: () => import('./hospitals/hospitals.module').then(m => m.HospitalsModule) },
-      { path: 'graphics', loadChildren: () => import('./graphics/graphics.module').then(m => m.GraphicsModule) },
-      { path: 'progress', loadChildren: () => import('./progress/progress.module').then(m => m.ProgressModule) },
-      { path: 'profile', loadChildren: () => import('./user-account/user-account.module').then(m => m.UserAccountModule) },
-      { path: 'promises', loadChildren: () => import('./promises/promises.module').then(m => m.PromisesModule) },
-      { path: '**', redirectTo: 'profile' },
+      {
+        path: 'users',
+        loadChildren: () =>
+          import('./users/users.module').then((m) => m.UsersModule),
+        data: { title: 'Users' },
+      },
+      {
+        path: 'doctors',
+        loadChildren: () =>
+          import('./doctors/doctors.module').then((m) => m.DoctorsModule),
+        data: { title: 'Doctors' },
+      },
+      {
+        path: 'hospitals',
+        loadChildren: () =>
+          import('./hospitals/hospitals.module').then((m) => m.HospitalsModule),
+        data: { title: 'Hospitals' },
+      },
+      {
+        path: 'graphics',
+        loadChildren: () =>
+          import('./graphics/graphics.module').then((m) => m.GraphicsModule),
+        data: { title: 'Graphics' },
+      },
+      {
+        path: 'progress',
+        loadChildren: () =>
+          import('./progress/progress.module').then((m) => m.ProgressModule),
+        data: { title: '' },
+      },
+      {
+        path: 'profile',
+        loadChildren: () =>
+          import('./user-account/user-account.module').then(
+            (m) => m.UserAccountModule
+          ),
+        data: { title: 'Profile' },
+      },
+      {
+        path: 'promises',
+        loadChildren: () =>
+          import('./promises/promises.module').then((m) => m.PromisesModule),
+        data: { title: 'Promises' },
+      },
+      { path: '**', redirectTo: 'profile', data: { title: 'Profile' } },
     ],
   },
 ];
 
 @NgModule({
   imports: [RouterModule.forChild(routes)],
-  exports: [RouterModule]
+  exports: [RouterModule],
 })
-export class PagesRoutingModule { }
+export class PagesRoutingModule {}
