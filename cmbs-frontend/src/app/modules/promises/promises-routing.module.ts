@@ -9,8 +9,8 @@ const routes: Routes = [
     path: '',
     component: LayoutPageComponent,
     children: [
-      { path: 'example', component: PromisePageComponent },
-      { path: 'rxjs', component: RxjsPageComponent },
+      { path: 'example', component: PromisePageComponent, data: {title: 'example'} },
+      { path: 'rxjs', component: RxjsPageComponent, data: {title: 'rxjs'} },
       { path: '**', redirectTo: 'example' },
     ],
   }

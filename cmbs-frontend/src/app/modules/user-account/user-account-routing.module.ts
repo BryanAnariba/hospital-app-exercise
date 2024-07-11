@@ -9,8 +9,8 @@ const routes: Routes = [
     path: '',
     component: LayoutPageComponent,
     children: [
-      { path: 'account', component: ProfilePageComponent },
-      { path: 'settings', component: SettingsPageComponent },
+      { path: 'account', component: ProfilePageComponent, data: {title: 'Account'} },
+      { path: 'settings', component: SettingsPageComponent, data: {title: 'Settings'} },
       { path: '**', redirectTo: 'account' },
     ],
   }

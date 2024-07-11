@@ -1,26 +1,39 @@
-import { Component, ɵSSR_CONTENT_INTEGRITY_MARKER } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
 import { ActivationEnd, Router } from '@angular/router';
-import { filter, map, tap } from 'rxjs';
+import { filter, map, Subscription, tap } from 'rxjs';
 
 @Component({
   selector: 'app-shared-breadcrumbs',
   templateUrl: './breadcrumbs.component.html',
   styleUrl: './breadcrumbs.component.css'
 })
-export class BreadcrumbsComponent {
+export class BreadcrumbsComponent implements OnDestroy {
+  
+  public title: string = '';
+  public titleSubscription$?: Subscription;
 
   constructor (
     private readonly router: Router
   ) {
-    this.router.events
+    this.titleSubscription$ = this.getRoute();
+  }
+
+  ngOnDestroy(): void {
+    this.titleSubscription$?.unsubscribe();
+  }
+
+  public getRoute () {
+    return this.router.events
       .pipe(
-        filter((event) => (event instanceof ActivationEnd)), // El primero de estos tiene el path ej: users, doctors, hospitals etc...
-        filter((event: ActivationEnd) => event.snapshot.firstChild === null),
+        filter(event => event instanceof ActivationEnd),
+        filter((event: any) => event.snapshot.firstChild === null),
+        tap(event => console.log(event)),
         map((event: ActivationEnd) => event.snapshot.data as any),
       )
       .subscribe({
-        next: ({title}) => {
-          console.log(title);
+        next: (data) => {
+          // console.log({data});
+          this.title = data.title;
         }
       });
   }
