@@ -13,7 +13,7 @@ export class User {
   @Column('varchar', {length: 150, unique: true, nullable: false})
   email: string;
 
-  @Column('varchar', {length: 255, nullable: false})
+  @Column('varchar', {select: false, length: 255, nullable: false})
   password: string;
 
   @Column('varchar', {length: 255, default: ''})

@@ -1,7 +1,8 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, ParseUUIDPipe, Query } from '@nestjs/common';
 import { RolesService } from './roles.service';
 import { CreateRoleDto } from './dto/create-role.dto';
 import { UpdateRoleDto } from './dto/update-role.dto';
+import { PaginationDto } from 'src/common/dto';
 
 @Controller('roles')
 export class RolesController {
@@ -13,22 +14,22 @@ export class RolesController {
   }
 
   @Get()
-  findAll() {
-    return this.rolesService.findAll();
+  findAll(@Query() paginationDto: PaginationDto) {
+    return this.rolesService.findAll(paginationDto);
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.rolesService.findOne(+id);
+  findOne(@Param('id', ParseUUIDPipe) id: string) {
+    return this.rolesService.findOne(id);
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateRoleDto: UpdateRoleDto) {
-    return this.rolesService.update(+id, updateRoleDto);
+  update(@Param('id', ParseUUIDPipe) id: string, @Body() updateRoleDto: UpdateRoleDto) {
+    return this.rolesService.update(id, updateRoleDto);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.rolesService.remove(+id);
+  remove(@Param('id', ParseUUIDPipe) id: string) {
+    return this.rolesService.remove(id);
   }
 }
