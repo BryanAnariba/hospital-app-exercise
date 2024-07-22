@@ -3,7 +3,7 @@ import { CreateRoleDto } from './dto/create-role.dto';
 import { UpdateRoleDto } from './dto/update-role.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Role } from './entities/role.entity';
-import { Repository } from 'typeorm';
+import { Like, Repository } from 'typeorm';
 import { PaginationDto } from 'src/common/dto';
 
 @Injectable()
@@ -62,6 +62,29 @@ export class RolesService {
       const role = await this.roleRepository.findOne({
         where: {
           id: id,
+          isActive: true,
+        },/*
+        relations: {
+          users: true,
+        },*/
+      });
+      if (!role)
+        throw new HttpException(`Role not found`, HttpStatus.NOT_FOUND);
+      return role;
+    } catch (error) {
+      if (error instanceof HttpException) throw error;
+      throw new HttpException(
+        `Sometime went wrong getting role: ${error}`,
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+  }
+
+  async findOneByName(roleName: string) {
+    try {
+      const role = await this.roleRepository.findOne({
+        where: {
+          roleName: Like(roleName.toUpperCase()),
           isActive: true,
         },/*
         relations: {

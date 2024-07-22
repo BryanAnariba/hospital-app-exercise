@@ -3,6 +3,7 @@ import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { PaginationDto } from 'src/common/dto';
+import { GetUsersByTerms } from './dto/get-users-by-terms.dto';
 
 @Controller('users')
 export class UsersController {
@@ -21,6 +22,14 @@ export class UsersController {
   @Get(':id')
   findOne(@Param('id', ParseUUIDPipe) id: string) {
     return this.usersService.findOne(id);
+  }
+
+  @Get('/by/terms')
+  findByTerms(
+    @Query() paginationDto: PaginationDto,
+    @Body() getUsersByTerms: GetUsersByTerms
+  ) {
+    return this.usersService.getUsersByTerm(paginationDto, getUsersByTerms);
   }
 
   @Patch(':id')
