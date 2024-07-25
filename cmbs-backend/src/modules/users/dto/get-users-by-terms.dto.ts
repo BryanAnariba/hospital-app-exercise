@@ -12,5 +12,9 @@ export class GetUsersByTerms {
 
   @IsString()
   @IsOptional()
+  email?: string;
+
+  @IsString()
+  @IsOptional()
   role?: string;
 }

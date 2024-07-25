@@ -25,9 +25,11 @@ import { RolesModule } from './modules/roles/roles.module';
       }),
     }),
     AuthModule, 
-    UsersModule, RolesModule
+    UsersModule, 
+    RolesModule,
   ],
   controllers: [],
   providers: [],
+  exports: []
 })
 export class AppModule {}

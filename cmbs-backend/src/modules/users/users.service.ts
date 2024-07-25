@@ -11,6 +11,7 @@ import { RolesService } from '../roles/roles.service';
 interface Terms {
   id?: string;
   completeName?: string;
+  email?: string;
   role?: string;
 }
 
@@ -85,9 +86,43 @@ export class UsersService {
         where: {
           id: id,
         },
+        select: {
+          password: false,
+        },
+        relations: {
+          role: true,
+        },
       });
       if (!user)
         throw new HttpException(`User not found`, HttpStatus.BAD_REQUEST);
+      return user;
+    } catch (error) {
+      if (error instanceof HttpException) throw error;
+      throw new HttpException(
+        `Sometime went wrong getting a users: ${error}`,
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+  }
+
+  async findOneByEmail(email: string) {
+    try {
+      const user = await this.userRepository.findOne({
+        where: {
+          email: email,
+        },
+        select: {
+          id: true,
+          email: true,
+          completeName: true,
+          isActive: true,
+          isGoogleUser: true,
+          password: true,
+        },
+        relations: {
+          role: true,
+        },
+      });
       return user;
     } catch (error) {
       if (error instanceof HttpException) throw error;
@@ -146,37 +181,48 @@ export class UsersService {
   // Si no manda nada llamar el get sin filtros si no este
   async getUsersByTerm(
     { skip, take }: PaginationDto,
-    { id, completeName, role }: Terms,
+    { completeName, role, email }: Terms,
   ) {
+    // console.log({ completeName, role, email });
     try {
-      const [users, totalUsers] = await Promise.all([
-        this.dataSource
-          .getRepository(User)
-          .createQueryBuilder('user')
-          .innerJoinAndSelect('user.role', 'role')
-          .where(
-            'user.id=:id OR LOWER(user.completeName) like :completeName OR user.role=:role',
-            { id, completeName: `%${completeName.toLowerCase()}%`, role },
-          )
-          .andWhere('user.isActive=:isActive', { isActive: true })
-          .skip(take * skip)
-          .take(take)
-          .getMany(),
-        this.dataSource
-          .getRepository(User)
-          .createQueryBuilder('user')
-          .where(
-            'user.id=:id OR LOWER(user.completeName) like :completeName OR user.role=:role',
-            { id, completeName: `%${completeName.toLowerCase()}%`, role },
-          )
-          .andWhere('user.isActive=:isActive', { isActive: true })
-          .getCount(),
-      ]);
+      if (!completeName && !role && !email) {
+        return this.findAll({ skip, take });
+      } else {
+        const [users, totalUsers] = await Promise.all([
+          this.dataSource
+            .getRepository(User)
+            .createQueryBuilder('user')
+            .innerJoinAndSelect('user.role', 'role')
+            .where('LOWER(user.completeName) LIKE LOWER(:completeName)', {
+              completeName: `%${completeName}%`,
+            })
+            .orWhere('LOWER(user.email) LIKE LOWER(:email)', {
+              email: `%${email}%`,
+            })
+            .orWhere('user.role=:role', { role })
+            .andWhere('user.isActive=:isActive', { isActive: true })
+            .skip(take * skip)
+            .take(take)
+            .getMany(),
+          this.dataSource
+            .getRepository(User)
+            .createQueryBuilder('user')
+            .where('LOWER(user.completeName) LIKE LOWER(:completeName)', {
+              completeName: `%${completeName}%`,
+            })
+            .orWhere('LOWER(user.email) LIKE LOWER(:email)', {
+              email: `%${email}%`,
+            })
+            .orWhere('user.role=:role', { role })
+            .andWhere('user.isActive=:isActive', { isActive: true })
+            .getCount(),
+        ]);
 
-      return {
-        users,
-        totalUsers,
-      };
+        return {
+          users,
+          totalUsers,
+        };
+      }
     } catch (error) {
       if (error instanceof HttpException) throw error;
       throw new HttpException(
