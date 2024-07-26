@@ -105,6 +105,32 @@ export class UsersService {
     }
   }
 
+  async findOneById(id: string) {
+    try {
+      const user = await this.userRepository.findOne({
+        where: {
+          id: id,
+        },
+        select: {
+          id: true,
+          email: true,
+          password: false,
+          isActive: true,
+        },
+        relations: {
+          role: true,
+        },
+      });
+      return user;
+    } catch (error) {
+      if (error instanceof HttpException) throw error;
+      throw new HttpException(
+        `Sometime went wrong getting a users: ${error}`,
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+  }
+
   async findOneByEmail(email: string) {
     try {
       const user = await this.userRepository.findOne({

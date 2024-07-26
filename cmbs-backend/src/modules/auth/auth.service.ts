@@ -6,6 +6,12 @@ import { RolesService } from '../roles/roles.service';
 import { JwtService } from '@nestjs/jwt';
 import { JWTPayload } from './interfaces';
 import { compareEncryption } from 'src/config';
+import { User } from '../users/entities/user.entity';
+
+// TODO: estas instalaciones al parecer son las unicas necesarias para usar passport con jwt
+// npm install --save @nestjs/passport passport
+// npm install --save @nestjs/jwt passport-jwt
+// npm install --save-dev @types/passport-jwt
 
 @Injectable()
 export class AuthService {
@@ -54,6 +60,17 @@ export class AuthService {
       if (error.code == 23505) throw new HttpException(`Role duplicate`, HttpStatus.BAD_REQUEST);
       throw new HttpException(`Sometime went wrong register the new user: ${error}`, HttpStatus.INTERNAL_SERVER_ERROR);
     }
+  }
+
+  public async refreshToken (user: User) {
+    return {
+      user: user,
+      token: this.createJWT({
+        id: user.id, 
+        email: user.email, 
+        role: user.role
+      }),
+    };
   }
 
   public createJWT (jwtPayload: JWTPayload): string {
