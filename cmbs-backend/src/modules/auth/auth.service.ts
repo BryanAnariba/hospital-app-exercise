@@ -28,6 +28,7 @@ export class AuthService {
       if (!existsUser) throw new HttpException(`Invalid Credentials - Email`, HttpStatus.UNAUTHORIZED);
       if (!compareEncryption(signInDto.password, existsUser.password)) throw new HttpException(`Invalid Credentials - Password`, HttpStatus.UNAUTHORIZED);
       if (!existsUser.isActive) throw new HttpException(`Inactive user`, HttpStatus.UNAUTHORIZED);
+      delete existsUser.password;
       return {
         user: existsUser,
         token: this.createJWT({
@@ -44,7 +45,7 @@ export class AuthService {
 
   public async signUp (signUpDto: SignUpDto) {
     try {
-      const defaultRole= await this.rolesService.findOneByName('USER');
+      const defaultRole= await this.rolesService.findOneByName('ADMIN');
       if (!defaultRole) throw new HttpException(`The default role does not found`, HttpStatus.NOT_FOUND);
       const userCreated = await this.usersService.create({...signUpDto, role: defaultRole.id});
       return {

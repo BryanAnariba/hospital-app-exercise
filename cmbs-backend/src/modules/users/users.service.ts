@@ -37,6 +37,7 @@ export class UsersService {
         ...createUserDto,
         password: generateEncryption(createUserDto.password),
         role: role,
+        
       });
       const saved = await this.userRepository.save(user);
       delete saved.password;

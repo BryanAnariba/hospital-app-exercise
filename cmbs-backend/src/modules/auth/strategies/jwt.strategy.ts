@@ -26,7 +26,7 @@ export class JwtSrategy extends PassportStrategy(Strategy) {
 
       if (!user) throw new HttpException(`Unauthorized: token or user is not valid.`, HttpStatus.UNAUTHORIZED);
       if (!user.isActive) throw new HttpException(`Unauthorized: user is not active.`, HttpStatus.UNAUTHORIZED);
-
+      
       return user;
     } catch (error) {
       if (error instanceof HttpException) throw error;

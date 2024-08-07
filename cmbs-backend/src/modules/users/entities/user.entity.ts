@@ -1,5 +1,5 @@
 import { Role } from "src/modules/roles/entities/role.entity";
-import { BeforeInsert, BeforeUpdate, Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { BeforeInsert, BeforeUpdate, Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity({name: 'users'})
 export class User {
@@ -27,6 +27,18 @@ export class User {
 
   @ManyToOne(() => Role, (role) => role.users)
   role: Role;
+
+  /*
+  @Column({ nullable: true })
+  public createdByUserId?: string;
+
+  @ManyToOne(() => User, user => user.id)
+  @JoinColumn({ name: "createdByUserId" })
+  public user?: User;
+  */
+
+  @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
+  createdAt: Date;
 
   @BeforeInsert()
   checkFieldsBeforeInsert () {
